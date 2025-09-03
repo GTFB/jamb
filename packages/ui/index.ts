@@ -1,3 +1,3 @@
-export * from './button';
-export * from './input';
+export { Button } from './components/button';
+export { Input } from './components/input';
 export * from './lib/utils';
