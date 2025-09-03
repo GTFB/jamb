@@ -35,6 +35,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 >
                   Media
                 </Link>
+                <Link
+                  href="/admin/constructor"
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  Constructor
+                </Link>
               </nav>
             </div>
             <div className="flex items-center space-x-4">
