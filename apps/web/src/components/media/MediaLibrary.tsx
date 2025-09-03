@@ -9,6 +9,12 @@ interface MediaFile {
   size: number;
   modified: string;
   url: string;
+  metadata?: {
+    width?: number;
+    height?: number;
+    format?: string;
+    hasAlpha?: boolean;
+  };
 }
 
 interface MediaLibraryProps {
@@ -122,12 +128,17 @@ export function MediaLibrary({ onSelect, siteId, className }: MediaLibraryProps)
                 }}
               />
             </div>
-            <div className="text-xs text-gray-600 truncate" title={file.name}>
-              {file.name}
-            </div>
-            <div className="text-xs text-gray-500">
-              {formatFileSize(file.size)}
-            </div>
+                         <div className="text-xs text-gray-600 truncate" title={file.name}>
+               {file.name}
+             </div>
+             <div className="text-xs text-gray-500">
+               {formatFileSize(file.size)}
+             </div>
+             {file.metadata && (
+               <div className="text-xs text-gray-400">
+                 {file.metadata.width}×{file.metadata.height}
+               </div>
+             )}
           </div>
         ))}
       </div>
