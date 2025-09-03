@@ -4,21 +4,22 @@ import fs from 'fs/promises';
 import path from 'path';
 import { contentRepo } from '../apps/web/lib/api';
 
-interface SearchIndexItem {
-  id: string;
-  title: string;
-  content: string;
-  url: string;
-  type: string;
-  siteId?: string;
-  tags: string[];
-  category?: string;
-}
+/**
+ * @typedef {Object} SearchIndexItem
+ * @property {string} id
+ * @property {string} title
+ * @property {string} content
+ * @property {string} url
+ * @property {string} type
+ * @property {string} [siteId]
+ * @property {string[]} tags
+ * @property {string} [category]
+ */
 
 async function buildSearchIndex() {
   console.log('Building search index...');
 
-  const searchIndex: SearchIndexItem[] = [];
+  const searchIndex = [];
   const sites = await contentRepo.getSites();
 
   // Add global content (not site-specific)
@@ -26,7 +27,7 @@ async function buildSearchIndex() {
   
   for (const collection of globalCollections) {
     try {
-      const items = await contentRepo.getCollection(collection as any);
+      const items = await contentRepo.getCollection(collection);
       
       for (const item of items) {
         if (item.frontmatter.published !== false) {
@@ -50,7 +51,7 @@ async function buildSearchIndex() {
   for (const siteId of sites) {
     for (const collection of globalCollections) {
       try {
-        const items = await contentRepo.getCollection(collection as any, siteId);
+        const items = await contentRepo.getCollection(collection, siteId);
         
         for (const item of items) {
           if (item.frontmatter.published !== false) {

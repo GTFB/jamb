@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { LoginButton } from '@/components/auth/LoginButton';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -17,7 +18,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               </Link>
               <nav className="flex space-x-6">
                 <Link
-                  href="/admin/dashboard"
+                  href="/admin"
                   className="text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Dashboard
@@ -37,6 +38,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               >
                 View Site
               </Link>
+              <LoginButton />
             </div>
           </div>
         </div>
