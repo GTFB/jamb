@@ -16,6 +16,7 @@
     "test": "bun test",
     "type-check": "bun run --cwd apps/web type-check",
     "build:search-index": "bun run scripts/build-search-index.js",
+    "optimize:images": "bun run scripts/optimize-images.js",
     "prepare": "husky"
   },
   "devDependencies": {
@@ -32,6 +33,7 @@
   "packageManager": "bun@1.0.0",
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
-    "react-hook-form": "^7.62.0"
+    "react-hook-form": "^7.62.0",
+    "sharp": "^0.34.3"
   }
 }

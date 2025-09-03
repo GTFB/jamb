@@ -1,5 +1,9 @@
+'use client';
+
 import { MediaLibrary } from '@/components/media/MediaLibrary';
 import { ImageUpload } from '@/components/media/ImageUpload';
+import { OptimizationSettings } from '@/components/media/OptimizationSettings';
+import { useState } from 'react';
 
 interface MediaPageProps {
   searchParams: {
@@ -9,6 +13,13 @@ interface MediaPageProps {
 
 export default function MediaPage({ searchParams }: MediaPageProps) {
   const { site } = searchParams;
+  const [optimizationSettings, setOptimizationSettings] = useState({
+    enabled: true,
+    quality: 80,
+    format: 'webp' as const,
+    maxWidth: 1920,
+    maxHeight: 1080,
+  });
 
   return (
     <div className="space-y-8">
@@ -27,12 +38,21 @@ export default function MediaPage({ searchParams }: MediaPageProps) {
       {/* Upload Section */}
       <div className="bg-white p-6 rounded-lg shadow-sm border">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Upload New File</h2>
+        
+        {/* Optimization Settings */}
+        <OptimizationSettings
+          settings={optimizationSettings}
+          onChange={setOptimizationSettings}
+          className="mb-4"
+        />
+        
         <ImageUpload
           onUpload={(url) => {
             // Refresh the page to show new file
             window.location.reload();
           }}
           siteId={site}
+          optimization={optimizationSettings}
         />
       </div>
 

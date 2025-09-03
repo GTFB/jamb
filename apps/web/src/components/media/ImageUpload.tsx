@@ -8,9 +8,16 @@ interface ImageUploadProps {
   onUpload: (url: string) => void;
   siteId?: string;
   className?: string;
+  optimization?: {
+    enabled?: boolean;
+    quality?: number;
+    format?: 'webp' | 'jpeg' | 'png' | 'avif';
+    maxWidth?: number;
+    maxHeight?: number;
+  };
 }
 
-export function ImageUpload({ onUpload, siteId, className }: ImageUploadProps) {
+export function ImageUpload({ onUpload, siteId, className, optimization }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -48,6 +55,11 @@ export function ImageUpload({ onUpload, siteId, className }: ImageUploadProps) {
           file: base64,
           filename: file.name,
           siteId,
+          optimize: optimization?.enabled ?? true,
+          quality: optimization?.quality ?? 80,
+          format: optimization?.format ?? 'webp',
+          maxWidth: optimization?.maxWidth,
+          maxHeight: optimization?.maxHeight,
         }),
       });
 
