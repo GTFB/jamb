@@ -14,7 +14,8 @@
     "lint": "bun run --cwd packages/config lint",
     "format": "bun run --cwd packages/config format",
     "test": "bun test",
-    "type-check": "bun run --cwd apps/web type-check"
+    "type-check": "bun run --cwd apps/web type-check",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

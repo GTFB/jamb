@@ -1,0 +1,73 @@
+echo "🔍 Running code validation..."
+
+# Check for Russian characters and non-Latin symbols in code files
+echo "📝 Checking for Russian characters and non-Latin symbols..."
+
+# Find all TypeScript, JavaScript, JSX, TSX, JSON, and MDX files
+FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx|json|mdx)$')
+
+if [ -n "$FILES" ]; then
+    # Check for Russian characters and non-Latin symbols
+    RUSSIAN_FOUND=false
+    
+    for file in $FILES; do
+        # Skip node_modules and other build directories
+        if [[ "$file" == *"node_modules"* ]] || [[ "$file" == *".next"* ]] || [[ "$file" == *"dist"* ]]; then
+            continue
+        fi
+        
+        # Check for Russian characters (а-я, А-Я, ё, Ё) - only in actual content lines
+        if git diff --cached "$file" | grep '^[+-][^+-]' | grep -q '[а-яёА-ЯЁ]'; then
+            echo "❌ Russian characters found in: $file"
+            echo "   Lines with Russian characters:"
+            git diff --cached "$file" | grep '^[+-][^+-]' | grep -n '[а-яёА-ЯЁ]' | head -5
+            RUSSIAN_FOUND=true
+        fi
+        
+        # Check for other non-Latin symbols (except allowed ones) - only in actual content lines
+        if git diff --cached "$file" | grep '^[+-][^+-]' | grep -q '[^\x00-\x7F]'; then
+            # Allow common symbols like ©, ®, ™, etc.
+            if git diff --cached "$file" | grep '^[+-][^+-]' | grep -q '[^\x00-\x7F©®™€£¥¢§¶†‡•‣⁂※]'; then
+                echo "❌ Non-Latin symbols found in: $file"
+                echo "   Lines with non-Latin symbols:"
+                git diff --cached "$file" | grep '^[+-][^+-]' | grep -n '[^\x00-\x7F©®™€£¥¢§¶†‡•‣⁂※]' | head -5
+                RUSSIAN_FOUND=true
+            fi
+        fi
+    done
+    
+    if [ "$RUSSIAN_FOUND" = true ]; then
+        echo ""
+        echo "🚫 Commit blocked!"
+        echo "   Found Russian characters or non-Latin symbols in code files."
+        echo "   Please remove them and try again."
+        echo ""
+        echo "💡 Allowed symbols: ©, ®, ™, €, £, ¥, ¢, §, ¶, †, ‡, •, ‣, ⁂, ※"
+        echo "   Code should be written in English only."
+        exit 1
+    fi
+fi
+
+# Check for Russian characters in comments and strings (warnings only)
+echo "⚠️  Checking comments and strings for Russian text (warnings only)..."
+
+for file in $FILES; do
+    if [[ "$file" == *"node_modules"* ]] || [[ "$file" == *".next"* ]] || [[ "$file" == *"dist"* ]]; then
+        continue
+    fi
+    
+    # Check for Russian in comments (// and /* */) - only in actual content lines
+    if git diff --cached "$file" | grep '^[+-][^+-]' | grep -E '(//.*[а-яёА-ЯЁ]|/\*.*[а-яёА-ЯЁ])'; then
+        echo "⚠️  Warning: Russian text found in comments in: $file"
+    fi
+    
+    # Check for Russian in strings (but allow in content files) - only in actual content lines
+    if [[ "$file" != *"content/"* ]] && [[ "$file" != *"data/"* ]]; then
+        if git diff --cached "$file" | grep '^[+-][^+-]' | grep -E '[^"]*[а-яёА-ЯЁ][^"]*'; then
+            echo "⚠️  Warning: Russian text found in strings in: $file"
+        fi
+    fi
+done
+
+echo "✅ Code validation passed!"
+echo "🚀 Proceeding with commit..."
