@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@jamb/ui';
 import { Input } from '@jamb/ui';
+import { ImageField } from '@/components/media/ImageField';
 import { useState } from 'react';
 
 interface DynamicFormProps {
@@ -12,9 +13,10 @@ interface DynamicFormProps {
   defaultValues?: any;
   onSubmit: (data: any) => Promise<void>;
   submitLabel?: string;
+  siteId?: string;
 }
 
-export function DynamicForm({ schema, defaultValues, onSubmit, submitLabel = 'Submit' }: DynamicFormProps) {
+export function DynamicForm({ schema, defaultValues, onSubmit, submitLabel = 'Submit', siteId }: DynamicFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -136,6 +138,29 @@ export function DynamicForm({ schema, defaultValues, onSubmit, submitLabel = 'Su
                 onChange={(e) => field.onChange(e.target.value.split(',').map(s => s.trim()))}
                 className={fieldError ? 'border-red-500' : ''}
                 placeholder="Enter values separated by commas"
+              />
+            )}
+          />
+          {fieldError && (
+            <p className="text-sm text-red-600">{fieldError.message}</p>
+          )}
+        </div>
+      );
+    }
+
+    // Handle image fields (check if field name contains 'image' or 'cover')
+    if (fieldName.toLowerCase().includes('image') || fieldName.toLowerCase().includes('cover')) {
+      return (
+        <div key={fieldName} className="space-y-2">
+          <Controller
+            name={fieldName}
+            control={control}
+            render={({ field }) => (
+              <ImageField
+                value={field.value || ''}
+                onChange={field.onChange}
+                siteId={siteId}
+                label={fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
               />
             )}
           />

@@ -105,6 +105,7 @@ export function ContentEditor({ collection, item, siteId }: ContentEditorProps) 
             defaultValues={item?.frontmatter}
             onSubmit={handleSubmit}
             submitLabel={isEditing ? 'Update' : 'Create'}
+            siteId={siteId}
           />
         </div>
 
