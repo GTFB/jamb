@@ -1,0 +1,24 @@
+{
+  "name": "jamb",
+  "version": "1.0.0",
+  "description": "Jamb - Git-as-CMS platform with multi-site support",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "bun run --cwd apps/web dev",
+    "build": "bun run --cwd apps/web build",
+    "start": "bun run --cwd apps/web start",
+    "lint": "bun run --cwd packages/config lint",
+    "format": "bun run --cwd packages/config format",
+    "test": "bun test",
+    "type-check": "bun run --cwd apps/web type-check"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "packageManager": "bun@1.0.0"
+}
