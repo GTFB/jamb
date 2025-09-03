@@ -29,6 +29,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 >
                   Collections
                 </Link>
+                <Link
+                  href="/admin/media"
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  Media
+                </Link>
               </nav>
             </div>
             <div className="flex items-center space-x-4">
