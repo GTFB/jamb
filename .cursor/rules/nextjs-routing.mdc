@@ -1,0 +1,55 @@
+# Next.js App Router Structure
+
+## Route Organization
+
+### Root Layout (`apps/web/src/app/layout.tsx`)
+- **Purpose**: Global layout with `<html>` and `<body>` tags
+- **Imports**: `globals.css`, fonts, AuthProvider
+- **Applies to**: ALL routes in the application
+
+### Route Groups
+- `(public-sites)` - Group for public site routes
+- `(admin)` - Group for admin routes (if exists)
+
+### Nested Layouts
+- `apps/web/src/app/(public-sites)/[site]/layout.tsx` - Site-specific layout
+- **Important**: Must inherit from root layout, NOT create new HTML structure
+- **Use**: `<>` (Fragment) instead of `<div>` to avoid duplicate HTML structure
+
+## Route Structure
+
+```
+apps/web/src/app/
+├── layout.tsx                    # Root layout (HTML, body, globals.css)
+├── page.tsx                      # Home page (/)
+├── login/
+│   └── page.tsx                  # Login page (/login)
+├── (public-sites)/              # Route group
+│   └── [site]/                   # Dynamic site parameter
+│       ├── layout.tsx            # Site layout (inherits from root)
+│       ├── page.tsx              # Site home page (/[site])
+│       ├── products/
+│       │   └── page.tsx          # Products page (/[site]/products)
+│       └── [...slug]/
+│           └── page.tsx          # Dynamic content pages
+└── admin/                        # Admin routes
+    └── page.tsx                  # Admin dashboard (/admin)
+```
+
+## Key Rules
+
+1. **Root Layout**: Only one layout with `<html>` and `<body>`
+2. **Nested Layouts**: Use fragments `<>` to inherit from parent
+3. **Global Styles**: Import `globals.css` only in root layout
+4. **Route Groups**: Use `()` for organization without affecting URL structure
+5. **Dynamic Routes**: Use `[]` for dynamic parameters
+
+## Common Issues
+
+- **Missing Styles**: Nested layout creating new HTML structure instead of inheriting
+- **Duplicate HTML**: Using `<div>` instead of `<>` in nested layouts
+- **Missing globals.css**: Not importing in root layout
+description:
+globs:
+alwaysApply: true
+---

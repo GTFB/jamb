@@ -1,0 +1,88 @@
+/* UI Components Styles */
+@layer components {
+  /* Button component */
+  .btn {
+    @apply inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+  
+  .btn-primary {
+    @apply bg-gray-900 text-white hover:bg-gray-800;
+  }
+  
+  .btn-outline {
+    @apply border border-gray-300 bg-white hover:bg-gray-50 hover:text-gray-900;
+  }
+  
+  /* Input component */
+  .input {
+    @apply flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  
+  /* Label component */
+  .label {
+    @apply text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70;
+  }
+  
+  /* Card component */
+  .card {
+    @apply rounded-lg border border-gray-200 bg-white text-gray-900 shadow-sm;
+  }
+  
+  .card-header {
+    @apply flex flex-col space-y-1.5 p-6;
+  }
+  
+  .card-title {
+    @apply text-2xl font-semibold leading-none tracking-tight;
+  }
+  
+  .card-description {
+    @apply text-sm text-gray-600;
+  }
+  
+  .card-content {
+    @apply p-6 pt-0;
+  }
+  
+  .card-footer {
+    @apply flex items-center p-6 pt-0;
+  }
+  
+  /* Header component */
+  .header {
+    @apply bg-white shadow-sm border-b;
+  }
+  
+  .header-container {
+    @apply container mx-auto px-4 py-4;
+  }
+  
+  .header-nav {
+    @apply flex items-center justify-between;
+  }
+  
+  .header-title {
+    @apply text-xl font-bold text-gray-900;
+  }
+  
+  .header-navigation {
+    @apply flex space-x-6;
+  }
+  
+  .header-nav-link {
+    @apply text-gray-600 hover:text-gray-900 transition-colors;
+  }
+  
+  /* Footer component */
+  .footer {
+    @apply bg-gray-50 border-t;
+  }
+  
+  .footer-container {
+    @apply container mx-auto px-4 py-8;
+  }
+  
+  .footer-content {
+    @apply text-center text-gray-600;
+  }
+}

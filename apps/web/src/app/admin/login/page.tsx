@@ -1,26 +1,65 @@
 'use client';
 
 import { signIn, useSession } from 'next-auth/react';
-import { Button } from '@jamb/ui';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function LoginPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (session) {
-      router.push('/admin');
+    if (session && status === 'authenticated') {
+      router.replace('/admin');
     }
-  }, [session, router]);
+  }, [session, status, router]);
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    try {
+      const result = await signIn('credentials', {
+        username,
+        password,
+        redirect: false,
+      });
+
+      if (result?.ok) {
+        router.replace('/admin');
+      } else {
+        alert('Login failed. Try any username/password for development.');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Login error occurred.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Show loading while checking session
   if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
           <p className="mt-2 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If already authenticated, show loading while redirecting
+  if (session && status === 'authenticated') {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+          <p className="mt-2 text-gray-600">Redirecting to admin...</p>
         </div>
       </div>
     );
@@ -34,21 +73,40 @@ export default function LoginPage() {
             Admin Panel Login
           </h2>
           <p className="mt-2 text-gray-600">
-            Sign in with GitHub to access content management
+            Development mode - use any credentials
           </p>
         </div>
         
-        <div className="mt-8 space-y-6">
-          <Button
-            onClick={() => signIn('github')}
-            className="w-full bg-gray-900 hover:bg-gray-800"
-            size="lg"
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+          <div>
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          
+          <div>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 0C4.477 0 0 4.484 0 10.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0110 4.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.942.359.31.678.921.678 1.856 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0020 10.017C20 4.484 15.522 0 10 0z" clipRule="evenodd" />
-            </svg>
-            Sign in with GitHub
-          </Button>
+            {isLoading ? 'Signing in...' : 'Sign in'}
+          </button>
           
           <div className="text-center">
             <a 
@@ -58,7 +116,7 @@ export default function LoginPage() {
               Back to Home
             </a>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );

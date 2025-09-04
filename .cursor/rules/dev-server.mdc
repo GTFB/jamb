@@ -1,0 +1,58 @@
+# Development Server Management
+
+## Background Server with Hot Reload
+
+Always run the development server in background mode with hot reload enabled:
+
+```bash
+# Start development server in background
+cd apps/web; bun run dev
+```
+
+## Server Management Commands
+
+### Start Server
+```bash
+# From project root
+cd apps/web; bun run dev
+```
+
+### Stop Server
+```bash
+# Stop all Node.js and Bun processes
+Get-Process | Where-Object {$_.ProcessName -like "*node*" -or $_.ProcessName -like "*bun*"} | Stop-Process -Force
+```
+
+### Clear Cache
+```bash
+# Clear Next.js cache
+Remove-Item apps/web/.next -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item apps/web/node_modules/.cache -Recurse -Force -ErrorAction SilentlyContinue
+```
+
+### Check Server Status
+```bash
+# Check if server is running
+Invoke-WebRequest -Uri http://localhost:3000/ -UseBasicParsing | Select-Object StatusCode, StatusDescription
+```
+
+## Important Notes
+
+- Server runs on `http://localhost:3000` by default
+- Hot reload is enabled automatically with `bun run dev`
+- Always clear cache when encountering ENOENT errors
+- Use PowerShell commands for Windows environment
+- Background processes persist between terminal sessions
+
+## Troubleshooting
+
+If server fails to start:
+1. Stop all existing processes
+2. Clear Next.js cache
+3. Restart server in background mode
+4. Wait 10-15 seconds for full startup
+5. Check server status with HTTP request
+description:
+globs:
+alwaysApply: true
+---
